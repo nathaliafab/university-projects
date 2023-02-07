@@ -1,25 +1,34 @@
-;Faça um programa em assembly modo real que conta a quantidade de vogais numa string declarada na memória,
-;e printa essa informação na tela.
+;programa em assembly modo real que conta a quantidade de vogais numa string declarada na memória e printa essa informação na tela.
 
 ORG 0x7C00		        ;bios
 BITS 16			        ;código de 16 bits
 
     jmp start
 
-str: db "Biscoito ou bolacha?", 0x0D, 0x0A, 0x00 ;string a ser analisada
+str: db "Biscoito ou bolacha? NAO IMPORTA", 0x0D, 0x0A, 0x00    ;string a ser analisada
+msg_print1: db "A string tem ", 0x00                ;string que será printada na tela
+msg_print2: db " vogais.", 0x0D, 0x0A, 0x00         ;string que será printada na tela
 
 start:
 	xor ax, ax	        ;zera os registradores
     xor bx, bx
     xor cx, cx
+
+    mov si, msg_print1  ;ponteiro para a string 1 que será printada na tela
+    call print_str      ;chama a rotina que printa a string na tela
+    xor ax, ax          ;limpa o registrador ax
+
     call conta_vogal    ;chama a rotina que conta as vogais
     call print_number   ;chama a rotina que printa o número na tela
+    
+    mov si, msg_print2  ;ponteiro para a string 2 que será printada na tela
+    call print_str
 
 end:
     jmp $               ;halt
 
 conta_vogal:
-    mov si, str         ;ponteiro para a string
+    mov si, str         ;ponteiro para a string a ser analisada
 
     .loop:
         lodsb           ;carrega o caractere atual para al e incrementa o ponteiro
@@ -74,6 +83,18 @@ conta_vogal:
         mov ax, cx      ;guarda o contador em ax
         ret
 
+print_str:
+    .loop:
+        lodsb
+        or al, al
+        jz .done
+        mov ah, 0x0E    ;int 10h, função 0Eh
+        int 0x10        ;chama o serviço de interrupção 10h
+        jmp .loop
+
+    .done:
+        ret
+
 print_number:
     mov bx, 10          ;divisor
     mov cx, 0           ;novo contador
@@ -90,8 +111,8 @@ print_number:
 
     .loop2:
         pop ax          ;desempilha o resto
-        mov ah, 0x0E    ;int 10h, função 0Eh
-        int 0x10        ;chama o serviço de interrupção 10h
+        mov ah, 0x0E
+        int 0x10
         loop .loop2     ;decrementa o contador e volta para o começo se não for 0
     
     .done:
