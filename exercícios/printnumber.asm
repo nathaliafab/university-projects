@@ -10,7 +10,7 @@ end:
     jmp $               ;halt
 
 print_number:
-    mov bx, 10          ;dividendo
+    mov bx, 10          ;divisor
     mov cx, 0           ;contador
 
     .loop1:
