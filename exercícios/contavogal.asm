@@ -10,15 +10,12 @@ msg_print1: db "A string tem ", 0x00                ;string que será printada n
 msg_print2: db " vogais.", 0x0D, 0x0A, 0x00         ;string que será printada na tela
 
 start:
-	xor ax, ax	        ;zera os registradores
-    xor bx, bx
-    xor cx, cx
-
     mov si, msg_print1  ;ponteiro para a string 1 que será printada na tela
     call print_str      ;chama a rotina que printa a string na tela
-    xor ax, ax          ;limpa o registrador ax
-
+    
+    mov si, str         ;ponteiro para a string a ser analisada
     call conta_vogal    ;chama a rotina que conta as vogais
+    
     call print_number   ;chama a rotina que printa o número na tela
     
     mov si, msg_print2  ;ponteiro para a string 2 que será printada na tela
@@ -27,8 +24,24 @@ start:
 end:
     jmp $               ;halt
 
+print_str:
+    xor ax, ax        ;zera o registrador ax
+
+    .loop:
+        lodsb
+        or al, al
+        jz .done
+        mov ah, 0x0E    ;int 10h, função 0Eh
+        int 0x10        ;chama o serviço de interrupção 10h
+        jmp .loop
+
+    .done:
+        ret
+
 conta_vogal:
-    mov si, str         ;ponteiro para a string a ser analisada
+    xor ax, ax          ;zera os registradores
+    xor bx, bx
+    xor cx, cx
 
     .loop:
         lodsb           ;carrega o caractere atual para al e incrementa o ponteiro
@@ -81,18 +94,6 @@ conta_vogal:
     
     .done:
         mov ax, cx      ;guarda o contador em ax
-        ret
-
-print_str:
-    .loop:
-        lodsb
-        or al, al
-        jz .done
-        mov ah, 0x0E    ;int 10h, função 0Eh
-        int 0x10        ;chama o serviço de interrupção 10h
-        jmp .loop
-
-    .done:
         ret
 
 print_number:
