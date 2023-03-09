@@ -1,5 +1,6 @@
 SECTION .text
-global soma
+    global soma
+    
 soma:
     enter 0,0
     mov eax, [ebp+8]
