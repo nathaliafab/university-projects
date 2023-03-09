@@ -1,3 +1,0 @@
-nasm -f bin helloworld.asm -o helloworld.bin
-hexdump -C helloworld.bin
-qemu-system-i386 helloworld.bin
