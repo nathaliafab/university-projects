@@ -55,8 +55,8 @@ calcularPI:
                 ;st1 = -1
                 ;st2 = k
         pt2:
-            fld dword[eax]  ;empilha o valor de k
-            fld dword[eax]  ;empilha o valor de k
+            fild dword[eax]  ;empilha o valor de k
+            fild dword[eax]  ;empilha o valor de k
             faddp           ;soma k + k, desempilha o st0 e põe o resultado no st1 => st1 vira st0
             fld1            ;empilha o valor de 1
             faddp           ;soma 1 + k + k, desempilha o st0 e põe o resultado no st1 => st1 vira st0
@@ -101,6 +101,5 @@ calcularPI:
                 ;st1 = -1
                 ;st2 = k + 1
         end:
-            fstp st0            ;desempilha o st0
     leave
     ret
