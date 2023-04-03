@@ -3,12 +3,13 @@
 
 SECTION .data
     read_n    db      "%d",0x00
+    print_n   db      "n = %d", 0x0a, 0x00
     pi db 0.0
     n db 0
 
 SECTION .text
     global calcularPI
-    extern scanf
+    extern scanf, printf
 
 calcularPI:
     finit
@@ -21,6 +22,14 @@ calcularPI:
         call scanf
         add esp, 8
 
+    print_n_value:
+        mov eax, [ebp+12]   ;carrega o endereço de n em eax
+        push dword [eax]    ;empilha o valor de n
+        push print_n        ;empilha a string de formato para printf
+        call printf         ;imprime o valor de n
+        add esp, 8          ;remove os argumentos da pilha
+
+    ;-----------------------------------SEGFAULT EM ALGUM LUGAR:
     mov eax, [ebp+12]
     mov [n], eax       ;guarda o valor de n na variável local n
     mov eax, [ebp+8]   ;carrega o endereço de pi em eax
@@ -97,7 +106,7 @@ calcularPI:
                 ;st1 = -1
                 ;st2 = k + 1
         end:
-            fld dword[pi]
-            fstp dword[eax]     ;armazena o resultado em eax, que aponta pra pi
+            fld dword[pi]       ;empilha o resultado
+            fstp dword[eax]     ;desempilha, armazenando em eax (que aponta pra pi)
     leave
     ret
