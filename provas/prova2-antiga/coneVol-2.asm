@@ -2,9 +2,6 @@
 ;implementar o cálculo do volume de um cone (PI * altura * raio²/3)
 
 SECTION .data
-    raio dd 4.0
-    altura dd 3.0
-    volume dd 0
 
 SECTION .text
 
@@ -13,12 +10,12 @@ global calcVol
 calcVol:
     finit
     enter 0,0
-    fld dword[raio]     ;empilha raio
-    fld dword[raio]     ;empilha raio
+    fld dword[ebp+8]    ;empilha raio
+    fld dword[ebp+8]    ;empilha raio
     fmulp               ;raio*raio
     fldpi               ;empilha pi
     fmulp               ;pi*raio*raio
-    fld dword[altura]   ;empilha altura
+    fld dword[ebp+12]   ;empilha altura
     fmulp               ;altura*pi*raio*raio
     fld1                ;empilha 3 (1+1+1)
     fld1
@@ -26,6 +23,6 @@ calcVol:
     fld1
     faddp
     fdivp               ;divide (altura*pi*raio*raio)/3
-    fst dword[volume]   ;armazena o resultado em volume
+    fst dword[ebp+16]   ;armazena o resultado em volume
     leave
-    ret                 ;retorna oq está no st0
+    ret
