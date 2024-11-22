@@ -30,7 +30,8 @@ class Lexer:
 		
     # Pular espaço em branco
     def skipWhitespace(self):
-        pass
+        while(self.curChar == ' ' or self.curChar == '\n' or self.curChar == '\t' or self.curChar == '\r' or self.curChar == '\f'):
+            self.nextChar()
 		
     # Pular comentários.
     def skipComment(self):
@@ -40,11 +41,106 @@ class Lexer:
     # Atualmente esta função retorna um token de tipo TEST para cada caractere do programa até alcançar EOF
     def getToken(self):
         token = None
+        self.skipWhitespace()
+        self.skipComment()
         
         if self.curChar == '\0':
             token = Token(self.curChar, TokenType.EOF)
+
+        elif self.curChar.isdigit():
+            token = Token(self.curChar, TokenType.NUMBER)
+
+        elif self.curChar.isalpha() or self.curChar == '_':
+            startChar = self.curChar
+            while self.peek().isalnum() or self.peek() == '_':
+                self.nextChar()
+                startChar += self.curChar
+            kind = Token.checkIfKeyword(startChar)
+            if kind == None:
+                kind = TokenType.IDENT
+            token = Token(startChar, kind)
+
+        elif self.curChar == '"':
+            startChar = ''
+            while self.peek() != '"':
+                self.nextChar()
+                startChar += self.curChar
+            self.nextChar()
+            token = Token(startChar, TokenType.LITERAL)
+
+        elif (self.curChar == '&' and self.peek() == '&'):
+            self.nextChar()
+            token = Token('&&', TokenType.AND)
+        
+        elif (self.curChar == '<'):
+            startChar = self.curChar
+            if self.peek() == '=':
+                self.nextChar()
+                token = Token(startChar + self.curChar, TokenType.LTEQ)
+            else:
+                token = Token(startChar, TokenType.LT)
+
+        elif (self.curChar == '>'):
+            startChar = self.curChar
+            if self.peek() == '=':
+                self.nextChar()
+                token = Token(startChar + self.curChar, TokenType.GTEQ)
+            else:
+                token = Token(startChar, TokenType.GT)
+
+        elif (self.curChar == '='):
+            if self.peek() == '=':
+                self.nextChar()
+                token = Token(self.curChar + self.curChar, TokenType.EQEQ)
+            else:
+                token = Token(self.curChar, TokenType.EQ)
+
+        elif (self.curChar == '!'):
+            startChar = self.curChar
+            if self.peek() == '=':
+                self.nextChar()
+                token = Token(startChar + self.curChar, TokenType.NOTEQ)
+            else:
+                token = Token(startChar, TokenType.NOT)
+
+        elif (self.curChar == '+'):
+            token = Token(self.curChar, TokenType.PLUS)
+        
+        elif (self.curChar == '-'):
+            token = Token(self.curChar, TokenType.MINUS)
+
+        elif (self.curChar == '*'):
+            token = Token(self.curChar, TokenType.MULT)
+
+        elif (self.curChar == ';'):
+            token = Token(self.curChar, TokenType.SEMICOLON)
+
+        elif (self.curChar == '.'):
+            token = Token(self.curChar, TokenType.DOT)
+        
+        elif (self.curChar == ','):
+            token = Token(self.curChar, TokenType.COMMA)
+
+        elif (self.curChar == '('):
+            token = Token(self.curChar, TokenType.L_PAREN)
+
+        elif (self.curChar == ')'):
+            token = Token(self.curChar, TokenType.R_PAREN)
+
+        elif (self.curChar == '{'):
+            token = Token(self.curChar, TokenType.L_BRACK)
+
+        elif (self.curChar == '}'):
+            token = Token(self.curChar, TokenType.R_BRACK)
+
+        elif (self.curChar == '['):
+            token = Token(self.curChar, TokenType.L_SQBRACK)
+
+        elif (self.curChar == ']'):
+            token = Token(self.curChar, TokenType.R_SQBRACK)
+
         else: 
-            token = Token(self.curChar,TokenType.TEST)
+            token = Token(self.curChar,TokenType.PUBLIC)
         
         self.nextChar()
         return token
