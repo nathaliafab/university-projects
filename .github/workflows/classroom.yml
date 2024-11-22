@@ -1,6 +1,6 @@
 name: Autograding Tests
 'on':
-- workflow_dispatch
+- push
 - repository_dispatch
 permissions:
   checks: write
@@ -13,16 +13,16 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    - name: Testes Lexer
-      id: testes-lexer
+    - name: Testes
+      id: testes
       uses: classroom-resources/autograding-python-grader@v1
       with:
         timeout: 10
-        max-score: 10
-        setup-command: sudo -H pip3 install pytest
+        max-score: 100
+        setup-command: ''
     - name: Autograding Reporter
       uses: classroom-resources/autograding-grading-reporter@v1
       env:
-        TESTES-LEXER_RESULTS: "${{steps.testes-lexer.outputs.result}}"
+        TESTES_RESULTS: "${{steps.testes.outputs.result}}"
       with:
-        runners: testes-lexer
+        runners: testes
