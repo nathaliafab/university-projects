@@ -63,17 +63,39 @@ class Lexer:
             token = Token(self.curChar, TokenType.EOF)
 
         elif self.curChar.isdigit():
-            token = Token(self.curChar, TokenType.NUMBER)
+            startChar = self.curChar
+            while self.peek().isdigit():
+                self.nextChar()
+                startChar += self.curChar
+            token = Token(startChar, TokenType.NUMBER)
 
         elif self.curChar.isalpha() or self.curChar == '_':
             startChar = self.curChar
             while self.peek().isalnum() or self.peek() == '_':
                 self.nextChar()
                 startChar += self.curChar
-            kind = Token.checkIfKeyword(startChar)
-            if kind == None:
-                kind = TokenType.IDENT
-            token = Token(startChar, kind)
+            if startChar == 'System' and self.peek() == '.':
+                self.nextChar()
+                startChar += self.curChar
+                while self.peek().isalpha():
+                    self.nextChar()
+                    startChar += self.curChar
+                if startChar == 'System.out' and self.peek() == '.':
+                    self.nextChar()
+                    startChar += self.curChar
+                    while self.peek().isalpha():
+                        self.nextChar()
+                        startChar += self.curChar
+                    if startChar == 'System.out.println':
+                        token = Token(startChar, TokenType.SYSTEM_OUT_PRINTLN)
+                else:
+                    self.abort("Token inválido: " + startChar)
+
+            if token == None:
+                kind = Token.checkIfKeyword(startChar)
+                if kind == None:
+                    kind = TokenType.IDENT
+                token = Token(startChar, kind)
 
         elif self.curChar == '"':
             startChar = ''
@@ -155,7 +177,7 @@ class Lexer:
             token = Token(self.curChar, TokenType.R_SQBRACK)
 
         else: 
-            token = Token(self.curChar,TokenType.PUBLIC)
+            self.abort("Token inválido: " + self.curChar)
         
         self.nextChar()
         return token
