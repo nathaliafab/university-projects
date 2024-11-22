@@ -55,9 +55,7 @@ class Lexer:
     def getToken(self):
         token = None
         self.skipWhitespace()
-
-        if self.curChar == '/':
-            self.skipComment()
+        self.skipComment()
         
         if self.curChar == '\0':
             token = Token(self.curChar, TokenType.EOF)
