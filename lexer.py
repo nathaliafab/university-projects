@@ -35,14 +35,29 @@ class Lexer:
 		
     # Pular comentários.
     def skipComment(self):
-        pass
+        while self.curChar == '/':
+            if self.peek() == '/':
+                while self.curChar != '\n':
+                    self.nextChar()
+            elif self.peek() == '*':
+                self.nextChar()
+                self.nextChar()
+                while not (self.curChar == '*' and self.peek() == '/'):
+                    self.nextChar()
+                self.nextChar()
+                self.nextChar()
+            else:
+                break
+            self.skipWhitespace()
 
     # Return o próximo token --> Implementar esta função e as funções de skip acima 
     # Atualmente esta função retorna um token de tipo TEST para cada caractere do programa até alcançar EOF
     def getToken(self):
         token = None
         self.skipWhitespace()
-        self.skipComment()
+
+        if self.curChar == '/':
+            self.skipComment()
         
         if self.curChar == '\0':
             token = Token(self.curChar, TokenType.EOF)
