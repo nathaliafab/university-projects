@@ -1,7 +1,8 @@
 name: Autograding Tests
 'on':
-- workflow_dispatch
-- repository_dispatch
+  repository_dispatch: []
+  schedule:
+  - cron: '59 2 * * *'
 permissions:
   checks: write
   actions: read
@@ -13,16 +14,16 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    - name: Testes LL(1) Parser
-      id: testes-ll-1-parser
+    - name: LL(1) Tests
+      id: ll-1-tests
       uses: classroom-resources/autograding-python-grader@v1
       with:
         timeout: 10
-        max-score: 10
-        setup-command: sudo -H pip3 install pytest
+        max-score: 100
+        setup-command: ''
     - name: Autograding Reporter
       uses: classroom-resources/autograding-grading-reporter@v1
       env:
-        TESTES-LL-1-PARSER_RESULTS: "${{steps.testes-ll-1-parser.outputs.result}}"
+        LL-1-TESTS_RESULTS: "${{steps.ll-1-tests.outputs.result}}"
       with:
-        runners: testes-ll-1-parser
+        runners: ll-1-tests
