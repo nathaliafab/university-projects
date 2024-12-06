@@ -69,6 +69,29 @@ class Grammar:
             self.firstSet[t] = {t}
         for nt in self.nonTerminals:
             self.firstSet[nt] = set()
+            for p in self.productions:
+                print(p)
+                if p.nonterminal == nt:
+                    print("achei a regra")
+                    if p.production[0] in self.terminals:
+                        self.firstSet[nt].add(p.production[0])
+                    elif p.production[0] == EPSILON:
+                        self.firstSet[nt].add(EPSILON)
+                    else:
+                        self.firstSet[nt].add(p.production[0])
+            
+        for nt in self.nonTerminals:
+            for nnt in self.nonTerminals:
+                print(nt)
+                print(nnt)
+                if nnt in self.firstSet[nt]:
+                    print("achei")
+                    self.firstSet[nt].remove(nnt)
+                    print(self.firstSet[nt])
+                    self.firstSet[nt].update(self.firstSet[nnt])
+                    print(self.firstSet[nt])
+                # print(self.firstSet[nt])          
+
         #Completar a implementação construindo conjuntos FIRST para cada um dos não-terminais
     
     #TODO implementar construção dos conjuntos FOLLOW da gramática
