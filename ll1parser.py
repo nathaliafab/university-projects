@@ -161,8 +161,34 @@ class Grammar:
             #Adicionando EOF como coluna
             self.parsingTable[nt]['$'] = []
 
+        for p in self.productions:
+            lhs = p.nonterminal
+            rhs = p.production
+
+            for i, s in enumerate(rhs):
+                if s in self.terminals and rhs not in self.parsingTable[lhs][s.name]:
+                    self.parsingTable[lhs][s.name].append(rhs)
+                    break
+                elif s == EPSILON:
+                    for t in self.followSet[lhs]:
+                        if rhs not in self.parsingTable[lhs][t.name]:
+                            self.parsingTable[lhs][t.name].append(rhs)
+                elif s in self.nonTerminals:
+                    for t in self.firstSet[s]:
+                        if t != EPSILON and rhs not in self.parsingTable[lhs][t.name]:
+                            self.parsingTable[lhs][t.name].append(rhs)
+                    if EPSILON in self.firstSet[s]:
+                        for t in self.followSet[s]:
+                            if rhs not in self.parsingTable[lhs][t.name]:
+                                self.parsingTable[lhs][t.name].append(rhs)
+        print(self.parsingTable)
+
     #TODO implementar checagem da gramática. Retorna True se a gramática é LL(1), False do contrário.
     def checkIfLL1(self):
+        for nt in self.nonTerminals:
+            for t in self.terminals:
+                if len(self.parsingTable[nt][t.name]) > 1:
+                    return False
         return True
 
     #Algoritmo de parsing, assume que cada caractere é um token 
