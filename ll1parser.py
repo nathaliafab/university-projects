@@ -166,8 +166,9 @@ class Grammar:
             rhs = p.production
 
             for i, s in enumerate(rhs):
-                if s in self.terminals and rhs not in self.parsingTable[lhs][s.name]:
-                    self.parsingTable[lhs][s.name].append(rhs)
+                if s in self.terminals:
+                    if rhs not in self.parsingTable[lhs][s.name]:
+                        self.parsingTable[lhs][s.name].append(rhs)
                     break
                 elif s == EPSILON:
                     for t in self.followSet[lhs]:
@@ -178,10 +179,19 @@ class Grammar:
                         if t != EPSILON and rhs not in self.parsingTable[lhs][t.name]:
                             self.parsingTable[lhs][t.name].append(rhs)
                     if EPSILON in self.firstSet[s]:
-                        for t in self.followSet[s]:
-                            if rhs not in self.parsingTable[lhs][t.name]:
-                                self.parsingTable[lhs][t.name].append(rhs)
-        print(self.parsingTable)
+                        if i == len(rhs) - 1:
+                            for t in self.followSet[s]:
+                                if rhs not in self.parsingTable[lhs][t.name]:
+                                    self.parsingTable[lhs][t.name].append(rhs)
+                        else:
+                            for t in self.firstSet[rhs[i + 1]]:
+                                if t != EPSILON and rhs not in self.parsingTable[lhs][t.name]:
+                                    self.parsingTable[lhs][t.name].append(rhs)
+                            if EPSILON in self.firstSet[rhs[i + 1]]:
+                                for t in self.followSet[s]:
+                                    if rhs not in self.parsingTable[lhs][t.name]:
+                                        self.parsingTable[lhs][t.name].append(rhs)
+                    break
 
     #TODO implementar checagem da gramática. Retorna True se a gramática é LL(1), False do contrário.
     def checkIfLL1(self):
