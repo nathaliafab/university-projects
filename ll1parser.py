@@ -70,29 +70,41 @@ class Grammar:
         for nt in self.nonTerminals:
             self.firstSet[nt] = set()
             for p in self.productions:
-                print(p)
-                if p.nonterminal == nt:
-                    print("achei a regra")
-                    if p.production[0] in self.terminals:
-                        self.firstSet[nt].add(p.production[0])
-                    elif p.production[0] == EPSILON:
+                lhs = p.nonterminal
+                rhs = p.production
+
+                if lhs == nt:
+                    if rhs[0] in self.terminals:
+                        self.firstSet[nt].add(rhs[0])
+
+                    elif rhs[0] == EPSILON:
                         self.firstSet[nt].add(EPSILON)
-                    else:
-                        self.firstSet[nt].add(p.production[0])
+
+                    elif rhs[0] in self.nonTerminals and rhs[0] != nt:
+                        self.firstSet[nt].add(rhs[0])
+
+                        for pp in self.productions:
+                            if pp.nonterminal == rhs[0]:
+                                if pp.production[0] == EPSILON and len(rhs) > 1:
+                                    self.firstSet[nt].add(rhs[1])
+                                    break
             
         for nt in self.nonTerminals:
-            for nnt in self.nonTerminals:
-                print(nt)
-                print(nnt)
-                if nnt in self.firstSet[nt]:
-                    print("achei")
+            while self.nonTerminals.intersection(self.firstSet[nt]):
+                for nnt in self.nonTerminals.intersection(self.firstSet[nt]):
                     self.firstSet[nt].remove(nnt)
-                    print(self.firstSet[nt])
                     self.firstSet[nt].update(self.firstSet[nnt])
-                    print(self.firstSet[nt])
-                # print(self.firstSet[nt])          
 
-        #Completar a implementação construindo conjuntos FIRST para cada um dos não-terminais
+            canRemoveEpsilon = True
+            for p in self.productions:
+                lhs = p.nonterminal
+                rhs = p.production
+                if lhs == nt and rhs[0] == EPSILON:
+                    canRemoveEpsilon = False
+                    break
+            
+            if canRemoveEpsilon and EPSILON in self.firstSet[nt]:
+                self.firstSet[nt].remove(EPSILON)
     
     #TODO implementar construção dos conjuntos FOLLOW da gramática
     def buildFollowSets(self):
@@ -100,7 +112,43 @@ class Grammar:
         for nt in self.nonTerminals:
             self.followSet[nt] = set()
         self.followSet[self.startSymbol].add(EOF)
-        #Completar a implementação construindo conjuntos FOLLOW para cada um dos não-terminais
+
+        changed = True
+        while changed:
+            changed = False
+            for p in self.productions:
+                lhs = p.nonterminal
+                rhs = p.production
+                
+                for i, nt in enumerate(rhs):
+                    if nt in self.nonTerminals:
+                        followingSymbols = rhs[i + 1:]
+
+                        if followingSymbols:
+                            for s in followingSymbols:
+                                if s in self.terminals:
+                                    if s not in self.followSet[nt]:
+                                        self.followSet[nt].add(s)
+                                        changed = True
+                                    break
+                                else:
+                                    prevSize = len(self.followSet[nt])
+                                    self.followSet[nt].update(self.firstSet[s] - {EPSILON})
+                                    if len(self.followSet[nt]) > prevSize:
+                                        changed = True
+
+                                    if EPSILON not in self.firstSet[s]:
+                                        break
+                            else:
+                                prevSize = len(self.followSet[nt])
+                                self.followSet[nt].update(self.followSet[lhs])
+                                if len(self.followSet[nt]) > prevSize:
+                                    changed = True
+                        else:
+                            prevSize = len(self.followSet[nt])
+                            self.followSet[nt].update(self.followSet[lhs])
+                            if len(self.followSet[nt]) > prevSize:
+                                changed = True
 
 
     #TODO implementar geração da tabela de parsing da gramática
