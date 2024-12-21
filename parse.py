@@ -176,9 +176,6 @@ class Parser:
     # ArrayPart ::= ϵ
     # | "[" "]" ArrayPart
     def ArrayPart(self):
-        print("ArrayPart")
-        print(self.tokenAtual.kind)
-
         if self.checkToken(TokenType.L_SQBRACK):
             self.match(TokenType.L_SQBRACK)
             self.match(TokenType.R_SQBRACK)
