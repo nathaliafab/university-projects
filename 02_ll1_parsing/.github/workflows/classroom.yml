@@ -1,0 +1,29 @@
+name: Autograding Tests
+'on':
+  repository_dispatch: []
+  schedule:
+  - cron: '59 2 * * *'
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: LL(1) Tests
+      id: ll-1-tests
+      uses: classroom-resources/autograding-python-grader@v1
+      with:
+        timeout: 10
+        max-score: 100
+        setup-command: ''
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        LL-1-TESTS_RESULTS: "${{steps.ll-1-tests.outputs.result}}"
+      with:
+        runners: ll-1-tests
