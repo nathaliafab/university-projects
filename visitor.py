@@ -130,10 +130,11 @@ class TypeCheckVisitor(GenericVisitor):
         symbol = self.symbolTable.lookup(node.id)
         if symbol is None:
             self.undeclaredVariable(node.id)
-        
-        exp_type = self.visit(node.exp)
-        if symbol.__str__() != exp_type.__str__():
-            self.varTypeMismatch(node.id, symbol.__str__(), exp_type.__str__())
+        else:
+            tipo = symbol.type
+            exp_type = self.visit(node.exp)
+            if tipo.name != exp_type.name:
+                self.varTypeMismatch(str(node.id), str(tipo), str(exp_type))
 
     def visit_VarDeclStmt(self, node):
         symbol = self.symbolTable.lookup(node.id, current_scope_only=True)
@@ -141,19 +142,21 @@ class TypeCheckVisitor(GenericVisitor):
             # Se já foi declarado no escopo atual, erro. não tem problema se foi declarado em um escopo acima
             self.alreadyDeclaredVariable(node.id)
         # Se não foi declarado ainda no escopo atual, insere
-        self.symbolTable.insert(node.id, BuiltInTypeSymbol(node.type))
+        tipo = self.symbolTable.lookup(node.type)
+        sym = VarSymbol(node.id, tipo)
+        self.symbolTable.insert(node.id, sym)
 
     def visit_WhileStmt(self, node):
         cond_type = self.visit(node.cond)
-        if cond_type.__str__() != self.BOOLEAN().__str__():
-            self.booleanExpTypeMismatch('WHILE', cond_type.__str__())
+        if cond_type != self.BOOLEAN():
+            self.booleanExpTypeMismatch('WHILE', str(cond_type))
         for stmt in node.body:
             self.visit(stmt)
 
     def visit_IfStmt(self, node):
         cond_type = self.visit(node.cond)
-        if cond_type.__str__() != self.BOOLEAN().__str__():
-            self.booleanExpTypeMismatch('IF', cond_type.__str__())
+        if cond_type != self.BOOLEAN():
+            self.booleanExpTypeMismatch('IF', str(cond_type))
         for stmt in node.body:
             self.visit(stmt)
 
@@ -179,74 +182,74 @@ class TypeCheckVisitor(GenericVisitor):
         symbol = self.symbolTable.lookup(node.id)
         if symbol is None:
             self.undeclaredVariable(node.id)
-        return symbol
+        return symbol.type
 
     def visit_SumExpr(self, node):
         left_type = self.visit(node.left)
         right_type = self.visit(node.right)
-        if left_type.__str__() != self.INT().__str__() or right_type.__str__() != self.INT().__str__():
-            self.arithExpTypeMismatch(left_type, right_type)
-        return self.INT()
-    
+        if left_type == self.INT() and right_type == self.INT():
+            return self.INT()
+        self.arithExpTypeMismatch(left_type, right_type)
+
     def visit_SubExpr(self, node):
         left_type = self.visit(node.left)
         right_type = self.visit(node.right)
-        if left_type.__str__() != self.INT().__str__() or right_type.__str__() != self.INT().__str__():
-            self.arithExpTypeMismatch(left_type, right_type)
-        return self.INT()
-    
+        if left_type == self.INT() and right_type == self.INT():
+            return self.INT()
+        self.arithExpTypeMismatch(left_type, right_type)
+
     def visit_DivExpr(self, node):
         left_type = self.visit(node.left)
         right_type = self.visit(node.right)
-        if left_type.__str__() != self.INT().__str__() or right_type.__str__() != self.INT().__str__():
-            self.arithExpTypeMismatch(left_type, right_type)
-        return self.INT()
-    
+        if left_type == self.INT() and right_type == self.INT():
+            return self.INT()
+        self.arithExpTypeMismatch(left_type, right_type)
+
     def visit_MulExpr(self, node):
         left_type = self.visit(node.left)
         right_type = self.visit(node.right)
-        if left_type.__str__() != self.INT().__str__() or right_type.__str__() != self.INT().__str__():
-            self.arithExpTypeMismatch(left_type, right_type)
-        return self.INT()
-    
+        if left_type == self.INT() and right_type == self.INT():
+            return self.INT()
+        self.arithExpTypeMismatch(left_type, right_type)
+
     def visit_GreaterThanExpr(self, node):
         left_type = self.visit(node.left)
         right_type = self.visit(node.right)
-        if left_type.__str__() != self.INT().__str__() or right_type.__str__() != self.INT().__str__():
-            self.relExpTypeMismatch(left_type, right_type)
-        return self.BOOLEAN()
+        if left_type == right_type:
+            return self.BOOLEAN()
+        self.relExpTypeMismatch(left_type, right_type)
 
     def visit_GreaterThanEqualsExpr(self, node):
         left_type = self.visit(node.left)
         right_type = self.visit(node.right)
-        if left_type.__str__() != self.INT().__str__() or right_type.__str__() != self.INT().__str__():
-            self.relExpTypeMismatch(left_type, right_type)
-        return self.BOOLEAN()
+        if left_type == right_type:
+            return self.BOOLEAN()
+        self.relExpTypeMismatch(left_type, right_type)
 
     def visit_LessThanEqualsExpr(self, node):
         left_type = self.visit(node.left)
         right_type = self.visit(node.right)
-        if left_type.__str__() != self.INT().__str__() or right_type.__str__() != self.INT().__str__():
-            self.relExpTypeMismatch(left_type, right_type)
-        return self.BOOLEAN()
+        if left_type == right_type:
+            return self.BOOLEAN()
+        self.relExpTypeMismatch(left_type, right_type)
 
     def visit_LessThanExpr(self, node):
         left_type = self.visit(node.left)
         right_type = self.visit(node.right)
-        if left_type.__str__() != self.INT().__str__() or right_type.__str__() != self.INT().__str__():
-            self.relExpTypeMismatch(left_type, right_type)
-        return self.BOOLEAN()
+        if left_type == right_type:
+            return self.BOOLEAN()
+        self.relExpTypeMismatch(left_type, right_type)
 
     def visit_EqualsExpr(self, node):
         left_type = self.visit(node.left)
         right_type = self.visit(node.right)
-        if left_type.__str__() != self.INT().__str__() or right_type.__str__() != self.INT().__str__():
-            self.relExpTypeMismatch(left_type, right_type)
-        return self.BOOLEAN()
+        if left_type == right_type:
+            return self.BOOLEAN()
+        self.relExpTypeMismatch(left_type, right_type)
 
     def visit_NotEqualsExpr(self, node):
         left_type = self.visit(node.left)
         right_type = self.visit(node.right)
-        if left_type.__str__() != self.INT().__str__() or right_type.__str__() != self.INT().__str__():
-            self.relExpTypeMismatch(left_type, right_type)
-        return self.BOOLEAN()
+        if left_type == right_type:
+            return self.BOOLEAN()
+        self.relExpTypeMismatch(left_type, right_type)
