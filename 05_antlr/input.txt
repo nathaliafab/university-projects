@@ -1,0 +1,15 @@
+x = 5
+y = x + 3
+y * 2
+if 2-2 then 4 else 2
+if 2+2 then 4 else 2
+a = 5
+if a then 8 else 16
+a = 0
+if a then 8 else 16
+if a then 8
+y = a - 2
+a = y + 1
+y = 45 - a
+x * y * a
+1xau
