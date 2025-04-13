@@ -35,7 +35,7 @@ Repositórios onde organizei atividades e outros artefatos.
 
 - [`/repos/IF684-sistemas-inteligentes`](./repos/IF684-sistemas-inteligentes)
 
-- `todo: /repos/IF688-compiladores`
+- [`/repos/IF688-compiladores`](./repos/IF688-compiladores)
 
 - `todo: /repos/IF867-introducao-a-aprendizagem-profunda`
 
