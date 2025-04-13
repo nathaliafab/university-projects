@@ -1,4 +1,4 @@
-Nesse repositório estão listados alguns dos projetos desenvolvidos durante minha graduação em Engenharia da Computação no Centro de Informática da Universidade Federal de Pernambuco (CIn-UFPE). 🤗
+Nesse repositório estão listados alguns dos projetos, listas e anotações desenvolvidos durante minha graduação em Engenharia da Computação no Centro de Informática da Universidade Federal de Pernambuco (CIn-UFPE).
 
 ---
 
@@ -22,7 +22,7 @@ Nesse repositório estão listados alguns dos projetos desenvolvidos durante min
 | 🧠 **Introdução à Aprendizagem Profunda (IF867)**                               | -               | -
 
 
-## 🌟 Outros Repositórios
+## Outros Repositórios
 Repositórios onde organizei atividades e outros artefatos.
 
 - [`/repos/IF669-introducao-a-programacao`](./repos/IF669-introducao-a-programacao)
@@ -39,7 +39,9 @@ Repositórios onde organizei atividades e outros artefatos.
 
 - `todo: /repos/IF867-introducao-a-aprendizagem-profunda`
 
-## 🌟 Projetos Relacionados
+- `todo: /repos/notes`
+
+## Projetos Relacionados
 Projetos paralelos desenvolvidos durante a graduação, em parceria com outros estudantes e/ou professores.
 
 - [PIBIC "Desenvolvimento de Protótipo do Processador RISC-V em FPGA"](https://github.com/estufa-cin-ufpe/RISC-V-Pipeline)
