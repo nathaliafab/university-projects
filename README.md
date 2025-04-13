@@ -19,8 +19,7 @@ Nesse repositório estão listados alguns dos projetos, listas e anotações des
 |                                                             | [`/projects/MLP`](./projects/MLP)                                 | [URL](https://github.com/fernandesbarreto/MLP)        |
 | 🎨 **Criatividade Computacional (IF866)**                   | [`/projects/Dixit-Expansion-Pack`](./projects/Dixit-Expansion-Pack) | [URL](https://github.com/joaomadruga/Dixit-Expansion-Pack) |
 |                                                             | [`/projects/taleteller`](./projects/taleteller)                   | [URL](https://github.com/joaomadruga/taleteller)     |
-| 🧠 **Introdução à Aprendizagem Profunda (IF867)**                               | -               | -
-
+| 🧠 **Introdução à Aprendizagem Profunda (IF867)**                               | [`/repos/IF867-introducao-a-aprendizagem-profunda/projeto`](./repos/IF867-introducao-a-aprendizagem-profunda/projeto)
 
 ## Outros Repositórios
 Repositórios onde organizei atividades e outros artefatos.
@@ -37,7 +36,7 @@ Repositórios onde organizei atividades e outros artefatos.
 
 - [`/repos/IF688-compiladores`](./repos/IF688-compiladores)
 
-- `todo: /repos/IF867-introducao-a-aprendizagem-profunda`
+- [`/repos/IF867-introducao-a-aprendizagem-profunda`](./repos/IF867-introducao-a-aprendizagem-profunda)
 
 - `todo: /repos/notes`
 
